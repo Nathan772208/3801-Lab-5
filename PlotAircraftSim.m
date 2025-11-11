@@ -36,6 +36,15 @@ title("Inertial Down position vs time")
 xlabel("time (s)")
 ylabel("D position (m)")
 
+ax = findall(gcf, 'Type', 'axes');
+for k = 1:length(ax)
+    axis(ax(k), 'tight');
+end
+for k = 1:length(ax)
+    yl = ylim(ax(k));
+    ylim(ax(k), yl + [-0.05 0.05] * range(yl));
+end
+
 %% Figure 2 Euler Angles
 figure(fig(2))
 
@@ -59,6 +68,15 @@ plot(time,aircraft_state_array(:,6),col)
 title("Yaw Angle vs time")
 xlabel("time (s)")
 ylabel("\psi (rad)")
+
+ax = findall(gcf, 'Type', 'axes');
+for k = 1:length(ax)
+    axis(ax(k), 'tight');
+end
+for k = 1:length(ax)
+    yl = ylim(ax(k));
+    ylim(ax(k), yl + [-0.05 0.05] * range(yl));
+end
 
 %% Figure 3 Inertial Velocity
 figure(fig(3))
@@ -84,6 +102,15 @@ title("Inertial velocity in body z direction vs time")
 xlabel("time (s)")
 ylabel("velocity (m/s)")
 
+ax = findall(gcf, 'Type', 'axes');
+for k = 1:length(ax)
+    axis(ax(k), 'tight');
+end
+for k = 1:length(ax)
+    yl = ylim(ax(k));
+    ylim(ax(k), yl + [-0.05 0.05] * range(yl));
+end
+
 %% Figure 4 Angular Velocity
 figure(fig(4))
 
@@ -107,6 +134,15 @@ plot(time,aircraft_state_array(:,12),col)
 title("Yaw Direction Anglular Velocity vs time")
 xlabel("time (s)")
 ylabel("r (rad/s)")
+
+ax = findall(gcf, 'Type', 'axes');
+for k = 1:length(ax)
+    axis(ax(k), 'tight');
+end
+for k = 1:length(ax)
+    yl = ylim(ax(k));
+    ylim(ax(k), yl + [-0.05 0.05] * range(yl));
+end
 
 %% Figure 5 Control Inputs
 figure(fig(5))
@@ -140,6 +176,15 @@ xlabel("time (s)")
 ylabel("Throttle Amount (0=none 1=full)")
 hold off
 
+ax = findall(gcf, 'Type', 'axes');
+for k = 1:length(ax)
+    axis(ax(k), 'tight');
+end
+for k = 1:length(ax)
+    yl = ylim(ax(k));
+    ylim(ax(k), yl + [-0.05 0.05] * range(yl));
+end
+
 %% Figure 6 3D graph
 figure(fig(6))
 
@@ -165,5 +210,13 @@ title("3D Path Plot")
 
 hold off
 
+ax = findall(gcf, 'Type', 'axes');
+for k = 1:length(ax)
+    axis(ax(k), 'tight');
+end
+for k = 1:length(ax)
+    yl = ylim(ax(k));
+    ylim(ax(k), yl + [-0.05 0.05] * range(yl));
+end
 
 end
