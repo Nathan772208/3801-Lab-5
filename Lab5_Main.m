@@ -4,10 +4,11 @@
 % Chris Hattingh
 
 %% Housekeeping
-clear; clc; close all;
+%clear; clc; close all;
+
 
 %% Question Toggles
-Q2_1 = 0;
+Q2_1 = 1;
 Q2_2 = 0;
 Q2_3 = 0;
 Q3_1 = 0;
@@ -15,6 +16,32 @@ Q3_2 = 0;
 
 %% Q2
 if Q2_1 == 1
+    x0_21 = [0;
+        0;
+        1609.34; % position ^
+        0;
+        0;
+        0;       % orientation ^
+        21;
+        0;
+        0;       % velocity ^
+        0;
+        0;
+        0];      % angular velocity ^
+
+    % wind in the inertial frame
+    wind_inertial = [0; 0; 0]; % Define wind vector in the inertial frame
+
+    % control inputs vector
+    aircraft_surfaces = [0; 0; 0; 0]; % Define control inputs vector
+
+    [t_part21, x_part21] = ode45(@(t,x) AircraftEOM(t,x,aircraft_surfaces,wind_inertial,aircraft_parameters), [0 10], x0_21);
+
+    % make x_part21 a column vector
+    x_part21 = x_part21';
+
+    % Generate Plots
+    PlotAircraftSim(t_part21, x_part21, aircraft_surfaces, [1, 2, 3, 4, 5, 6], 'r');
 
 end
 
@@ -34,4 +61,3 @@ end
 if Q3_2 == 1
 
 end
-
