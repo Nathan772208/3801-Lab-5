@@ -148,7 +148,7 @@ stateLength = size(aircraft_state_array,1);
 hold on
 
 % Create a colormap that transitions from green to red
-cmap = [linspace(0, 1, stateLength)', zeros(stateLength, 1), linspace(1, 0, stateLength)'];
+cmap = [linspace(0, 1, stateLength)', linspace(1, 0, stateLength)', zeros(stateLength, 1)];
 
 % Plot the 3D line with color gradient
 
