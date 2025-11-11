@@ -1,4 +1,4 @@
-function xdot = AircraftEOM(time, aircraft_state, aircraft_surfaces, wind_inertial, aircraft_parameters)
+function xdot = AircraftEOM(~, aircraft_state, aircraft_surfaces, wind_inertial, aircraft_parameters)
 % unpack state vector
 xe = var(1);
 ye = var(2);
