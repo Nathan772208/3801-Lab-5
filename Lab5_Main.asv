@@ -73,10 +73,20 @@ if Q2_1 == 1
 end
 
 if Q2_2 == 1
+    % wind in the inertial frame
+    wind_inertial = [0; 0; 0]; % Define wind vector in the inertial frame
+
+    % control inputs vector
+    aircraft_surfaces = [0; 0; 0; 0]; % Define control inputs vector
     
 end
 
 if Q2_3 == 1
+    % wind in the inertial frame
+    wind_inertial = [0; 0; 0]; % Define wind vector in the inertial frame
+
+    % control inputs vector
+    aircraft_surfaces = [0; 0; 0; 0]; % Define control inputs vector
     
 end
 
@@ -86,8 +96,19 @@ if Q3_1 == 1
     doublet_size = 15; % (deg)
     doublet_time = 0.25; % (sec)
 
+    % wind in the inertial frame
+    wind_inertial = [0; 0; 0]; % Define wind vector in the inertial frame
+
+    % control inputs vector
+    aircraft_surfaces = [0.1079; 0; 0; 0.3182]; % Define control inputs vector
+
 end
 
 if Q3_2 == 1
+    % wind in the inertial frame
+    wind_inertial = [0; 0; 0]; % Define wind vector in the inertial frame
+
+    % control inputs vector
+    aircraft_surfaces = [0; 0; 0; 0]; % Define control inputs vector
 
 end
