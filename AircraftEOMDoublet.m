@@ -34,19 +34,19 @@ gamma7 = (Ix*(Ix-Iy) + Ixz^2)/gamma;
 gamma8 = Ix/gamma;
 
 % Calculate density from the height (inertial z)
-density = stdatmo(z);
+[~,~,~,density] = atmoscoesa(-ze);
 
 % trim control
 delta_e_trim = aircraft_surfaces;
 
 % Doublet effects
-if (0 < time) && (time <= doublet_time)
+if time <= doublet_time
     delta_e = delta_e_trim + doublet_size;
 end
-if (doublet_time < time) && (time <= 2 * doublet_time)
+if doublet_time < time && time <= 2 * doublet_time
     delta_e = delta_e_trim - doublet_size;
 end
-if (time > 2 * doublet_time)
+if time > 2 * doublet_time
     delta_e = delta_e_trim;
 end
 aircraft_surfaces = delta_e;
