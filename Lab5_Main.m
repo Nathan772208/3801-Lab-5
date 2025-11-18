@@ -78,7 +78,7 @@ if Q2_2 == 1
 
     % control inputs vector
     aircraft_surfaces = [0.1079; 0; 0; 0.3182]; % Define control inputs vector
-    
+
 end
 
 if Q2_3 == 1
@@ -101,6 +101,15 @@ if Q3_1 == 1
 
     % control inputs vector
     aircraft_surfaces = [0.1079; 0; 0; 0.3182]; % Define control inputs vector
+
+    [t_part31, x_part31] = ode45(@(t,x) AircraftEOMDoublet(t, x, aircraft_surfaces, doublet_size,...
+                                   doublet_time, wind_inertial, aircraft_parameters), [0 10], x0_22);
+    
+    % make x_part21 a column vector
+    x_part31 = x_part31';
+
+    % Generate Plots
+    PlotAircraftSim(t_part31, x_part31, aircraft_surfaces, [1, 2, 3, 4, 5, 6], 'r');
 
 end
 

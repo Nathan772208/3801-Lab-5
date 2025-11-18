@@ -24,7 +24,7 @@ Ixz = aircraft_parameters.Ixz;
 
 % Define all gamma (Inertia) terms
 gamma = Ix*Iz - Ixz^2;
-gamma1 = (Ixz/gamma) * (Ix-Iy-Iz);
+gamma1 = (Ixz/gamma) * (Ix-Iy+Iz);
 gamma2 = (Iz*(Iz-Iy) + Ixz^2)/gamma;
 gamma3 = Iz/gamma;
 gamma4 = Ixz/gamma;

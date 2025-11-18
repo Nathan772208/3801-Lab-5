@@ -77,8 +77,8 @@ if Q2_2 == 1
     wind_inertial = [0; 0; 0]; % Define wind vector in the inertial frame
 
     % control inputs vector
-    aircraft_surfaces = [0; 0; 0; 0]; % Define control inputs vector
-    
+    aircraft_surfaces = [0.1079; 0; 0; 0.3182]; % Define control inputs vector
+
 end
 
 if Q2_3 == 1
