@@ -1,222 +1,176 @@
 function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, col)
-% ----------------------------------------------------------------------- %
-% Inputs: time (s) ; aircraft state array ; control input array (N) ;
-% figure numbers ; plotting option
-%
-% Outputs: 6 figures
-%
-% Methodology: Four figures with three subplots each showing state over
-% time,mone figure with four subplots showing control inputs and one figure
-% showing three dimensional path of the aircraft
-%
-% ----------------------------------------------------------------------- %
+% PLOTAIRCRAFTSIM plots the results of a full simulation once it is complete
+% Inputs: 
+%     time : time corresponding to nth set of state variables
+%     aircraft_state_array : array of aircraft state vectors
+%     control_input_array : array of control inputs
+%     fig : vector of figure numbers to plot over
+%     col : indicates plotting option for every plot
+% 
+% Outputs:
+%     6 plots
 
-
-%% Figure 1 Inertial Position
+% subplots for inertial position
 figure(fig(1))
-
 subplot(311)
+plot(time, aircraft_state_array(1,:), col) 
 hold on
-plot(time,aircraft_state_array(:,1),col)
-title("Inertial North position vs time")
-xlabel("time (s)")
-ylabel("N position (m)")
+grid on
+title("x position")
+xlabel("Time (s)")
+ylabel("Inertial Position (m)")
 
 subplot(312)
+plot(time, aircraft_state_array(2,:), col)
 hold on
-plot(time,aircraft_state_array(:,2),col)
-title("Inertial East position vs time")
-xlabel("time (s)")
-ylabel("E position (m)")
+grid on
+title("y position")
+xlabel("Time (s)")
+ylabel("Inertial Position (m)")
 
 subplot(313)
+plot(time, aircraft_state_array(3,:), col)
 hold on
-plot(time,aircraft_state_array(:,3),col)
-title("Inertial Down position vs time")
-xlabel("time (s)")
-ylabel("D position (m)")
+grid on
+title("z position")
+xlabel("Time (s)")
+ylabel("Inertial Position (m)")
 
-ax = findall(gcf, 'Type', 'axes');
-for k = 1:length(ax)
-    axis(ax(k), 'tight');
-end
-for k = 1:length(ax)
-    yl = ylim(ax(k));
-    ylim(ax(k), yl + [-0.05 0.05] * range(yl));
-end
+sgtitle("Inertial Position of Aircraft Over Time")
 
-%% Figure 2 Euler Angles
+% subplots for euler angles 
 figure(fig(2))
-
 subplot(311)
+plot(time, aircraft_state_array(4,:), col)
 hold on
-plot(time,aircraft_state_array(:,4),col)
-title("Roll Angle vs time")
-xlabel("time (s)")
-ylabel("\phi (rad)")
+grid on
+title("Roll Angle \Phi")
+xlabel("Time (s)")
+ylabel("Euler Angles (rad)")
 
 subplot(312)
+plot(time, aircraft_state_array(5,:), col)
 hold on
-plot(time,aircraft_state_array(:,5),col)
-title("Pitch Angle vs time")
-xlabel("time (s)")
-ylabel("\theta (rad)")
+grid on
+title("Pitch Angle \theta")
+xlabel("Time (s)")
+ylabel("Euler Angles (rad)")
 
 subplot(313)
+plot(time, aircraft_state_array(6,:), col)
 hold on
-plot(time,aircraft_state_array(:,6),col)
-title("Yaw Angle vs time")
-xlabel("time (s)")
-ylabel("\psi (rad)")
+grid on
+title("Yaw Angle \Psi")
+xlabel("Time (s)")
+ylabel("Euler Angles (rad)")
 
-ax = findall(gcf, 'Type', 'axes');
-for k = 1:length(ax)
-    axis(ax(k), 'tight');
-end
-for k = 1:length(ax)
-    yl = ylim(ax(k));
-    ylim(ax(k), yl + [-0.05 0.05] * range(yl));
-end
+sgtitle("Euler Angles of Aircraft Over Time")
 
-%% Figure 3 Inertial Velocity
+% subplots for inertial velocity in body frame
 figure(fig(3))
-
 subplot(311)
+plot(time, aircraft_state_array(7,:), col)
 hold on
-plot(time,aircraft_state_array(:,7),col)
-title("Inertial velocity in body x direction vs time")
-xlabel("time (s)")
-ylabel("velocity (m/s)")
+grid on
+title("x velocity u^E")
+xlabel("Time (s)")
+ylabel("Inertial Velocity (m/s)")
 
 subplot(312)
+plot(time, aircraft_state_array(8,:), col)
 hold on
-plot(time,aircraft_state_array(:,8),col)
-title("Inertial velocity in body y direction vs time")
-xlabel("time (s)")
-ylabel("velocity (m/s)")
+grid on
+title("y velocity v^E")
+xlabel("Time (s)")
+ylabel("Inertial Velocity (m/s)")
 
 subplot(313)
+plot(time, aircraft_state_array(9,:), col)
 hold on
-plot(time,aircraft_state_array(:,9),col)
-title("Inertial velocity in body z direction vs time")
-xlabel("time (s)")
-ylabel("velocity (m/s)")
+grid on
+title("z velocity w^E")
+xlabel("Time (s)")
+ylabel("Inertial Velocity (m/s)")
 
-ax = findall(gcf, 'Type', 'axes');
-for k = 1:length(ax)
-    axis(ax(k), 'tight');
-end
-for k = 1:length(ax)
-    yl = ylim(ax(k));
-    ylim(ax(k), yl + [-0.05 0.05] * range(yl));
-end
+sgtitle("Inertial Velocity of Aircraft in Body Frame Over Time")
 
-%% Figure 4 Angular Velocity
+% subplots for angular velocity
 figure(fig(4))
-
 subplot(311)
+plot(time, aircraft_state_array(10,:), col)
 hold on
-plot(time,aircraft_state_array(:,10),col)
-title("Roll Direction Anglular Velocity vs time")
-xlabel("time (s)")
-ylabel("p (rad/s)")
+grid on
+title("\omega_x (p)")
+xlabel("Time (s)")
+ylabel("Angular Velocity (rad/s)")
 
 subplot(312)
+plot(time, aircraft_state_array(11,:), col)
 hold on
-plot(time,aircraft_state_array(:,11),col)
-title("Pitch Direction Anglular Velocity vs time")
-xlabel("time (s)")
-ylabel("q (rad/s)")
+grid on
+title("\omega_y (q)")
+xlabel("Time (s)")
+ylabel("Angular Velocity (rad/s)")
 
 subplot(313)
+plot(time, aircraft_state_array(12,:), col)
 hold on
-plot(time,aircraft_state_array(:,12),col)
-title("Yaw Direction Anglular Velocity vs time")
-xlabel("time (s)")
-ylabel("r (rad/s)")
+grid on
+title("\omega_z (r)")
+xlabel("Time (s)")
+ylabel("Angular Velocity (rad/s)")
 
-ax = findall(gcf, 'Type', 'axes');
-for k = 1:length(ax)
-    axis(ax(k), 'tight');
-end
-for k = 1:length(ax)
-    yl = ylim(ax(k));
-    ylim(ax(k), yl + [-0.05 0.05] * range(yl));
-end
+sgtitle("Angular Velocity of Aircraft Over Time")
 
-%% Figure 5 Control Inputs
+% subplots for each control variable
 figure(fig(5))
-
-subplot(221)
+subplot(411)
+plot(time, rad2deg(control_input_array(1,:)), col)
 hold on
-plot(time,rad2degree(control_input_array(:,1)),col)
-title("Elevator Deflection vs time")
-xlabel("time (s)")
-ylabel("Elevator Deflection (deg)")
+grid on
+title("Elevator Deflection")
+xlabel("Time (s)")
+ylabel("Deflection (deg)")
 
-subplot(222)
+subplot(412)
+plot(time, rad2deg(control_input_array(2,:)), col)
 hold on
-plot(time,rad2degree(control_input_array(:,2)),col)
-title("Aileron Deflection vs time")
-xlabel("time (s)")
-ylabel("Aileron Deflection (deg)")
+grid on
+title("Aileron Deflection")
+xlabel("Time (s)")
+ylabel("Deflection (deg)")
 
-subplot(223)
+subplot(413)
+plot(time, rad2deg(control_input_array(3,:)), col)
 hold on
-plot(time,rad2degree(control_input_array(:,3)),col)
-title("Rudder Deflection vs time")
-xlabel("time (s)")
-ylabel("Rudder Deflection (deg)")
+grid on
+title("Rudder Deflection")
+xlabel("Time (s)")
+ylabel("Deflection (deg)")
 
-subplot(224)
+subplot(414)
+plot(time, control_input_array(4,:), col)
 hold on
-plot(time,control_input_array(:,4),col)
-title("Throttle Input vs time")
-xlabel("time (s)")
-ylabel("Throttle Amount (0=none 1=full)")
-hold off
+grid on
+title("Throttle")
+xlabel("Time (s)")
+ylabel("Fraction from 0 to 1")
 
-ax = findall(gcf, 'Type', 'axes');
-for k = 1:length(ax)
-    axis(ax(k), 'tight');
-end
-for k = 1:length(ax)
-    yl = ylim(ax(k));
-    ylim(ax(k), yl + [-0.05 0.05] * range(yl));
-end
+sgtitle("Control Variables of Aircraft Over Time")
 
-%% Figure 6 3D graph
+% three dimensional path of aircraft
 figure(fig(6))
-
-stateLength = size(aircraft_state_array,1);
-
+plot3(aircraft_state_array(1,:), aircraft_state_array(2,:), aircraft_state_array(3,:), col, 'LineWidth',1);
 hold on
 
-% Create a colormap that transitions from green to red
-cmap = [linspace(0, 1, stateLength)', linspace(1, 0, stateLength)', zeros(stateLength, 1)];
+% marking start point, end point of trajectory
+plot3(aircraft_state_array(1,1), aircraft_state_array(2,1), aircraft_state_array(3,1), 'g.', 'MarkerSize',15);
+plot3(aircraft_state_array(1,end), aircraft_state_array(2,end), aircraft_state_array(3,end), 'r.','MarkerSize',15);
 
-% Plot the 3D line with color gradient
-
-for i = 1:stateLength-1
-    plot3(aircraft_state_array(i:i+1,1), aircraft_state_array(i:i+1,2), aircraft_state_array(i:i+1,3),'Color',cmap(i,:),'LineWidth',2);
-end
-
-view(3)
-grid on;
-xlabel('N Inertial Direction');
-ylabel('E Inertial Direction');
-zlabel('D Inertial Direction');
-title("3D Path Plot")
-
-hold off
-
-ax = findall(gcf, 'Type', 'axes');
-for k = 1:length(ax)
-    axis(ax(k), 'tight');
-end
-for k = 1:length(ax)
-    yl = ylim(ax(k));
-    ylim(ax(k), yl + [-0.05 0.05] * range(yl));
-end
-
+% plot options
+xlabel('x position (m)')
+ylabel('y position (m)')
+zlabel('z position (m)')
+grid on
+title('3D Path of Aircraft')
 end
