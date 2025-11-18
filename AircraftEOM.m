@@ -1,17 +1,17 @@
 function xdot = AircraftEOM(time, aircraft_state, aircraft_surfaces, wind_inertial, aircraft_parameters)
 % unpack state vector
-xe = var(1);
-ye = var(2);
-ze = var(3);
-phi = var(4);
-theta = var(5);
-psi = var(6);
-ue = var(7);
-ve = var(8);
-we = var(9);
-p = var(10);
-q = var(11);
-r = var(12);
+xe = aircraft_state(1);
+ye = aircraft_state(2);
+ze = aircraft_state(3);
+phi = aircraft_state(4);
+theta = aircraft_state(5);
+psi = aircraft_state(6);
+ue = aircraft_state(7);
+ve = aircraft_state(8);
+we = aircraft_state(9);
+p = aircraft_state(10);
+q = aircraft_state(11);
+r = aircraft_state(12);
 
 % Define all constants
 m = aircraft_parameters.m;
@@ -23,7 +23,7 @@ Ixz = aircraft_parameters.Ixz;
 
 % Define all gamma (Inertia) terms
 gamma = Ix*Iz - Ixz^2;
-gamma1 = (Ixz/gamma) * (Ix-Iy-Iz);
+gamma1 = (Ixz/gamma) * (Ix-Iy+Iz);
 gamma2 = (Iz*(Iz-Iy) + Ixz^2)/gamma;
 gamma3 = Iz/gamma;
 gamma4 = Ixz/gamma;
