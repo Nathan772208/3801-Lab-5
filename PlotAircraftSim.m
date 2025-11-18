@@ -10,6 +10,8 @@ function PlotAircraftSim(time, aircraft_state_array, control_input_array, fig, c
 % Outputs:
 %     6 plots
 
+aircraft_state_array(3,:) = -aircraft_state_array(3,:);
+
 % subplots for inertial position
 figure(fig(1))
 subplot(311)
