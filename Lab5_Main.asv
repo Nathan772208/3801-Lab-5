@@ -18,13 +18,13 @@ Q3_2 = 0;
 if Q2_1 == 1
     x0_21 = [0;
              0;
-             1609.34; % position (m)^
+             1609.34; % position ^
              0;
              0;
              0;       % orientation ^
              21;
              0;
-             0;       % velocity (m/s)^
+             0;       % velocity ^
              0;
              0;
              0];      % angular velocity ^
@@ -48,31 +48,31 @@ end
 if Q2_2 == 1
     x0_22 = [0;
              0;
-             -1800; % position (m)^
+             -1800; % position ^
              0;
              0.02780;
              0;       % orientation (radians)^
              20.99;
              0;
-             0.5837;       % velocity (m/s)^
+             0.5837;       % velocity ^
              0;
              0;
-             0];      % angular velocity (deg/s)^
+             0];      % angular velocity ^
 end
 
 if Q2_3 == 1
     x0_22 = [0;
              0;
-             -1800; % position (m)^
+             -1800; % position ^
              15;
              -12;
              270;       % orientation (degrees)^
              19;
              3;
-             -2;       % velocity (m/s)^
-             0.08;
-             -0.2;
-             0];      % angular velocity (deg/s)^
+             -2;       % velocity ^
+             0.;
+             0;
+             0];      % angular velocity ^
 end
 
 %% Q3
