@@ -1,4 +1,4 @@
-function xdot = AircraftEOM(~, aircraft_state, aircraft_surfaces, wind_inertial, aircraft_parameters)
+function xdot = AircraftEOM(time, aircraft_state, aircraft_surfaces, wind_inertial, aircraft_parameters)
 % unpack state vector
 xe = var(1);
 ye = var(2);
@@ -33,7 +33,7 @@ gamma7 = (Ix*(Ix-Iy) + Ixz^2)/gamma;
 gamma8 = Ix/gamma;
 
 % Calculate density from the height (inertial z)
-density = stdatmo(z);
+[~,~,~,density] = atmoscoesa(ze);
 
 % Use the given AeroForcesAndMoments function to find X, Y, Z, L, M, N
 [aero_forces, aero_moments] = AeroForcesAndMoments(aircraft_state, aircraft_surfaces, wind_inertial, density, aircraft_parameters);
