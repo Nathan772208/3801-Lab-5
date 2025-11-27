@@ -1,5 +1,47 @@
-function xdot = AircraftEOMDoublet(time, aircraft_state, aircraft_surfaces, doublet_size,...
-                                   doublet_time, wind_inertial, aircraft_parameters)
+function xdot = AircraftEOMDoublet(time, aircraft_state, aircraft_surfaces, doublet_size, doublet_time, wind_inertial, aircraft_parameters)
+%
+% Inputs:
+%   time                = current simulation time (s)
+%   aircraft_state      = 12x1 state vector:
+%                         [xe; ye; ze; phi; theta; psi; ue; ve; we; p; q; r]
+%                         positions in inertial frame (m), Euler angles (rad),
+%                         body-frame linear velocities (m/s), and body
+%                         angular rates (rad/s)
+%   aircraft_surfaces   = control surface deflections vector
+%                         aircraft_surfaces(1) = elevator deflection (rad)
+%                         remaining entries may include aileron, rudder, throttle
+%   doublet_size        = magnitude of control surface doublet input (rad)
+%   doublet_time        = duration of each half of the doublet input (s)
+%   wind_inertial       = 3x1 wind vector in inertial frame [Wx; Wy; Wz] (m/s)
+%   aircraft_parameters = structure containing aircraft constants:
+%                         m, g, Ix, Iy, Iz, Ixz
+%
+% Outputs:
+%   xdot = 12x1 derivative of the state vector:
+%          [xe_dot; ye_dot; ze_dot; phi_dot; theta_dot; psi_dot;
+%           ue_dot; ve_dot; we_dot; p_dot; q_dot; r_dot]
+%
+% Methodology:
+%   - Implements the full six degree-of-freedom (6-DOF) rigid-body equations
+%     of motion for a fixed-wing aircraft.
+%   - A control surface doublet is applied to the elevator channel:
+%         time <= doublet_time: elevator = elevator + doublet_size
+%         doublet_time < time <= 2*doublet_time: elevator = elevator - doublet_size
+%         time > 2*doublet_time: elevator returns to baseline
+%   - Atmospheric density is computed from altitude using atmoscoesa.
+%   - Aerodynamic forces and moments (X, Y, Z, L, M, N) are obtained from
+%     AeroForcesAndMoments, which accounts for aircraft state, control
+%     inputs, wind, and atmospheric density.
+%   - Computes inertia coupling using gamma parameters (gamma1 through gamma8)
+%     derived from the inertia matrix.
+%   - Computes translational accelerations based on aerodynamic forces,
+%     rotation rates, and gravity.
+%   - Computes rotational accelerations from aerodynamic moments and
+%     inertia coupling.
+%   - Computes inertial position and Euler angle rates using the standard
+%     direction cosine relationships for a 3-2-1 rotation sequence.
+%
+
 % unpack state vector
 xe = aircraft_state(1);
 ye = aircraft_state(2);
@@ -24,34 +66,32 @@ Ixz = aircraft_parameters.Ixz;
 
 % Define all gamma (Inertia) terms
 gamma = Ix*Iz - Ixz^2;
-gamma1 = (Ixz/gamma) * (Ix-Iy+Iz);
-gamma2 = (Iz*(Iz-Iy) + Ixz^2)/gamma;
-gamma3 = Iz/gamma;
-gamma4 = Ixz/gamma;
-gamma5 = (Iz-Ix)/Iy;
-gamma6 = Ixz/Iy;
-gamma7 = (Ix*(Ix-Iy) + Ixz^2)/gamma;
-gamma8 = Ix/gamma;
+gamma1 = (Ixz/gamma) * (Ix - Iy + Iz);
+gamma2 = (Iz*(Iz - Iy) + Ixz^2) / gamma;
+gamma3 = Iz / gamma;
+gamma4 = Ixz / gamma;
+gamma5 = (Iz - Ix) / Iy;
+gamma6 = Ixz / Iy;
+gamma7 = (Ix*(Ix - Iy) + Ixz^2) / gamma;
+gamma8 = Ix / gamma;
 
-% Calculate density from the height (inertial z)
+% Calculate density from altitude (negative ze = positive altitude)
 [~,~,~,density] = atmoscoesa(-ze);
 
-% trim control
-delta_e_trim = aircraft_surfaces;
+% Elevator doublet input modification
+if (time <= doublet_time)
+    aircraft_surfaces(1) = aircraft_surfaces(1) + doublet_size;
+end
 
-% Doublet effects
-if time <= doublet_time
-    delta_e = delta_e_trim + doublet_size;
+if (time > doublet_time && time <= (2*doublet_time))
+    aircraft_surfaces(1) = aircraft_surfaces(1) - doublet_size; 
 end
-if doublet_time < time && time <= 2 * doublet_time
-    delta_e = delta_e_trim - doublet_size;
-end
-if time > 2 * doublet_time
-    delta_e = delta_e_trim;
-end
-aircraft_surfaces = delta_e;
 
-% Use the given AeroForcesAndMoments function to find X, Y, Z, L, M, N
+if (time > (2*doublet_time))
+    aircraft_surfaces(1) = aircraft_surfaces(1);
+end
+
+% Aerodynamic forces and moments
 [aero_forces, aero_moments] = AeroForcesAndMoments(aircraft_state, aircraft_surfaces, wind_inertial, density, aircraft_parameters);
 
 % Unpack aero_forces vector
@@ -71,7 +111,7 @@ ye_dot = cos(theta)*sin(psi)*ue + (sin(phi)*sin(theta)*sin(psi) + cos(phi)*cos(p
     + (cos(phi)*sin(theta)*sin(psi) - sin(phi)*cos(psi))*we;
 ze_dot = -sin(theta)*ue + sin(phi)*cos(theta)*ve + cos(phi)*cos(theta)*we;
 
-% euler angle derivatives
+% Euler angle derivatives
 phi_dot = p + sin(phi)*tan(theta)*q + cos(phi)*tan(theta)*r;
 theta_dot = cos(phi)*q - sin(phi)*r;
 psi_dot = sin(phi)*sec(theta)*q + cos(phi)*sec(theta)*r;
@@ -99,4 +139,5 @@ xdot = [xe_dot;
     p_dot;
     q_dot;
     r_dot];
+
 end
