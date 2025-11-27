@@ -1,4 +1,40 @@
 function xdot = AircraftEOM(time, aircraft_state, aircraft_surfaces, wind_inertial, aircraft_parameters)
+%
+% Inputs:
+%   time                = current simulation time (s)
+%   aircraft_state      = 12x1 state vector:
+%                         [xe; ye; ze; phi; theta; psi; ue; ve; we; p; q; r]
+%                         positions in Earth frame (m), Euler angles (rad),
+%                         linear velocities in body frame (m/s), and body
+%                         angular rates (rad/s)
+%   aircraft_surfaces   = structure containing current control surface
+%                         deflections (aileron, elevator, rudder, throttle)
+%   wind_inertial       = 3x1 vector of inertial wind components [Wx; Wy; Wz] (m/s)
+%   aircraft_parameters = structure containing aircraft constants:
+%                         m  = mass (kg)
+%                         g  = gravitational acceleration (m/s^2)
+%                         Ix, Iy, Iz, Ixz = inertia terms (kg*m^2)
+%
+% Outputs:
+%   xdot = 12x1 time derivative of the state vector:
+%          [xe_dot; ye_dot; ze_dot; phi_dot; theta_dot; psi_dot;
+%           ue_dot; ve_dot; we_dot; p_dot; q_dot; r_dot]
+%
+% Methodology:
+%   - Implements the full six degree-of-freedom (6-DOF) rigid-body aircraft
+%     equations of motion including wind, aerodynamic forces, and control inputs.
+%   - Computes the inertia coupling terms using gamma parameters derived from
+%     the aircraft inertia matrix.
+%   - Determines atmospheric density from altitude using the COESA model.
+%   - Computes aerodynamic forces (X, Y, Z) and moments (L, M, N) using
+%     AeroForcesAndMoments, which accounts for wind and control inputs.
+%   - Computes translational accelerations from aerodynamic forces, gravity,
+%     and rotational coupling.
+%   - Computes rotational accelerations from aerodynamic moments and inertia coupling.
+%   - Computes position and Euler angle rates based on standard direction cosine
+%     relationships for a 3-2-1 (yaw-pitch-roll) rotation sequence.
+%
+
 % unpack state vector
 xe = aircraft_state(1);
 ye = aircraft_state(2);
@@ -21,21 +57,21 @@ Iy = aircraft_parameters.Iy;
 Iz = aircraft_parameters.Iz;
 Ixz = aircraft_parameters.Ixz;
 
-% Define all gamma (Inertia) terms
+% Define all gamma (inertia coupling) terms
 gamma = Ix*Iz - Ixz^2;
-gamma1 = (Ixz/gamma) * (Ix-Iy+Iz);
-gamma2 = (Iz*(Iz-Iy) + Ixz^2)/gamma;
-gamma3 = Iz/gamma;
-gamma4 = Ixz/gamma;
-gamma5 = (Iz-Ix)/Iy;
-gamma6 = Ixz/Iy;
-gamma7 = (Ix*(Ix-Iy) + Ixz^2)/gamma;
-gamma8 = Ix/gamma;
+gamma1 = (Ixz/gamma) * (Ix - Iy + Iz);
+gamma2 = (Iz*(Iz - Iy) + Ixz^2) / gamma;
+gamma3 = Iz / gamma;
+gamma4 = Ixz / gamma;
+gamma5 = (Iz - Ix) / Iy;
+gamma6 = Ixz / Iy;
+gamma7 = (Ix*(Ix - Iy) + Ixz^2) / gamma;
+gamma8 = Ix / gamma;
 
 % Calculate density from the height (inertial z)
 [~,~,~,density] = atmoscoesa(-ze);
 
-% Use the given AeroForcesAndMoments function to find X, Y, Z, L, M, N
+% Aerodynamic forces and moments
 [aero_forces, aero_moments] = AeroForcesAndMoments(aircraft_state, aircraft_surfaces, wind_inertial, density, aircraft_parameters);
 
 % Unpack aero_forces vector
@@ -55,7 +91,7 @@ ye_dot = cos(theta)*sin(psi)*ue + (sin(phi)*sin(theta)*sin(psi) + cos(phi)*cos(p
     + (cos(phi)*sin(theta)*sin(psi) - sin(phi)*cos(psi))*we;
 ze_dot = -sin(theta)*ue + sin(phi)*cos(theta)*ve + cos(phi)*cos(theta)*we;
 
-% euler angle derivatives
+% Euler angle derivatives
 phi_dot = p + sin(phi)*tan(theta)*q + cos(phi)*tan(theta)*r;
 theta_dot = cos(phi)*q - sin(phi)*r;
 psi_dot = sin(phi)*sec(theta)*q + cos(phi)*sec(theta)*r;
